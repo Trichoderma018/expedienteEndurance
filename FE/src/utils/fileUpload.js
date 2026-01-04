@@ -1,25 +1,47 @@
 /**
  * UTILIDAD PARA SUBIR ARCHIVOS A DJANGO
- * Reemplaza la funcionalidad de S3
+ * Sistema simplificado sin compresión - solo validación
  */
 
 /**
  * Validar archivo antes de subirlo
+ * @param {File} file - Archivo a validar
+ * @param {string} tipo - Tipo de archivo ('imagen' o 'pdf')
  */
-export function validarArchivo(file, options = {}) {
-  const {
-    maxSize = 5 * 1024 * 1024, // 5MB por defecto
-    allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'],
-  } = options;
+export function validarArchivo(file, tipo = 'imagen') {
+  const limites = {
+    imagen: {
+      maxSize: 5 * 1024 * 1024, // 5MB
+      tipos: ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'],
+      nombreTipo: 'imagen'
+    },
+    pdf: {
+      maxSize: 10 * 1024 * 1024, // 10MB
+      tipos: ['application/pdf'],
+      nombreTipo: 'PDF'
+    }
+  };
+  
+  const config = limites[tipo];
+  
+  if (!config) {
+    throw new Error(`Tipo de validación no soportado: ${tipo}`);
+  }
 
   // Validar tamaño
-  if (file.size > maxSize) {
-    throw new Error(`El archivo es muy grande. Máximo ${maxSize / 1024 / 1024}MB`);
+  if (file.size > config.maxSize) {
+    const sizeMB = (file.size / 1024 / 1024).toFixed(2);
+    const maxMB = (config.maxSize / 1024 / 1024).toFixed(0);
+    throw new Error(
+      `El ${config.nombreTipo} es muy grande (${sizeMB}MB). Máximo: ${maxMB}MB`
+    );
   }
 
   // Validar tipo
-  if (!allowedTypes.includes(file.type)) {
-    throw new Error(`Tipo de archivo no permitido. Permitidos: ${allowedTypes.join(', ')}`);
+  if (!config.tipos.includes(file.type)) {
+    throw new Error(
+      `Tipo de archivo no permitido. Permitidos: ${config.tipos.join(', ')}`
+    );
   }
 
   return true;
@@ -27,12 +49,15 @@ export function validarArchivo(file, options = {}) {
 
 /**
  * Crear FormData con archivo e información adicional
+ * @param {File} file - Archivo a subir
+ * @param {string} nombreCampo - Nombre del campo para el archivo (ej: 'imagen', 'imagen_perfil', 'adjunto_notas')
+ * @param {Object} data - Datos adicionales a incluir en el FormData
  */
-export function crearFormDataConArchivo(file, data = {}) {
+export function crearFormDataConArchivo(file, nombreCampo = 'imagen', data = {}) {
   const formData = new FormData();
   
-  // Añadir archivo
-  formData.append('imagen', file);
+  // Añadir archivo con el nombre de campo especificado
+  formData.append(nombreCampo, file);
   
   // Añadir campos adicionales
   Object.keys(data).forEach(key => {
@@ -46,6 +71,8 @@ export function crearFormDataConArchivo(file, data = {}) {
 
 /**
  * Previsualizar imagen antes de subir
+ * @param {File} file - Archivo de imagen
+ * @returns {Promise<string>} - Data URL de la imagen
  */
 export function previsualizarImagen(file) {
   return new Promise((resolve, reject) => {
@@ -64,74 +91,9 @@ export function previsualizarImagen(file) {
 }
 
 /**
- * Comprimir imagen antes de subir
- */
-export async function comprimirImagen(file, maxWidth = 1920, maxHeight = 1080, quality = 0.8) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    
-    reader.onload = (e) => {
-      const img = new Image();
-      
-      img.onload = () => {
-        // Calcular nuevas dimensiones
-        let width = img.width;
-        let height = img.height;
-        
-        if (width > maxWidth) {
-          height = (height * maxWidth) / width;
-          width = maxWidth;
-        }
-        
-        if (height > maxHeight) {
-          width = (width * maxHeight) / height;
-          height = maxHeight;
-        }
-        
-        // Crear canvas
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-        
-        // Convertir a blob
-        canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              // Crear nuevo archivo con el blob comprimido
-              const compressedFile = new File([blob], file.name, {
-                type: file.type,
-                lastModified: Date.now(),
-              });
-              resolve(compressedFile);
-            } else {
-              reject(new Error('Error al comprimir imagen'));
-            }
-          },
-          file.type,
-          quality
-        );
-      };
-      
-      img.onerror = () => {
-        reject(new Error('Error al cargar imagen para comprimir'));
-      };
-      
-      img.src = e.target.result;
-    };
-    
-    reader.onerror = () => {
-      reject(new Error('Error al leer archivo'));
-    };
-    
-    reader.readAsDataURL(file);
-  });
-}
-
-/**
  * Obtener URL completa de una imagen en Django
+ * @param {string} imagenPath - Ruta de la imagen
+ * @returns {string|null} - URL completa o null
  */
 export function obtenerUrlImagen(imagenPath) {
   if (!imagenPath) return null;
@@ -148,6 +110,8 @@ export function obtenerUrlImagen(imagenPath) {
 
 /**
  * Obtener extensión del archivo
+ * @param {string} filename - Nombre del archivo
+ * @returns {string} - Extensión en minúsculas
  */
 export function obtenerExtension(filename) {
   return filename.split('.').pop().toLowerCase();
@@ -155,6 +119,8 @@ export function obtenerExtension(filename) {
 
 /**
  * Generar nombre único para archivo
+ * @param {string} originalName - Nombre original del archivo
+ * @returns {string} - Nombre único generado
  */
 export function generarNombreUnico(originalName) {
   const timestamp = Date.now();
@@ -166,7 +132,9 @@ export function generarNombreUnico(originalName) {
 }
 
 /**
- * Validar PDF
+ * Validar PDF (alias de validarArchivo para mantener compatibilidad)
+ * @param {File} file - Archivo PDF
+ * @param {number} maxSize - Tamaño máximo en bytes (default: 10MB)
  */
 export function validarPDF(file, maxSize = 10 * 1024 * 1024) {
   if (file.type !== 'application/pdf') {
@@ -174,7 +142,9 @@ export function validarPDF(file, maxSize = 10 * 1024 * 1024) {
   }
   
   if (file.size > maxSize) {
-    throw new Error(`El PDF es muy grande. Máximo ${maxSize / 1024 / 1024}MB`);
+    const sizeMB = (file.size / 1024 / 1024).toFixed(2);
+    const maxMB = (maxSize / 1024 / 1024).toFixed(0);
+    throw new Error(`El PDF es muy grande (${sizeMB}MB). Máximo: ${maxMB}MB`);
   }
   
   return true;
@@ -182,23 +152,29 @@ export function validarPDF(file, maxSize = 10 * 1024 * 1024) {
 
 /**
  * Hook React para manejar subida de imágenes
- * Uso en componentes:
  * 
- * const { uploading, preview, handleFileSelect, clearPreview } = useImageUpload();
+ * @example
+ * const { uploading, preview, file, handleFileSelect, clearPreview } = useImageUpload();
+ * 
+ * <input type="file" onChange={handleFileSelect} accept="image/*" />
+ * {preview && <img src={preview} alt="Preview" />}
  */
 export function useImageUpload() {
   const [uploading, setUploading] = React.useState(false);
   const [preview, setPreview] = React.useState(null);
   const [file, setFile] = React.useState(null);
+  const [error, setError] = React.useState(null);
 
   const handleFileSelect = async (event) => {
     const selectedFile = event.target.files[0];
     
-    if (!selectedFile) return;
+    if (!selectedFile) return null;
 
     try {
+      setError(null);
+      
       // Validar
-      validarArchivo(selectedFile);
+      validarArchivo(selectedFile, 'imagen');
       
       // Crear preview
       const previewUrl = await previsualizarImagen(selectedFile);
@@ -208,7 +184,9 @@ export function useImageUpload() {
       return selectedFile;
     } catch (error) {
       console.error('Error al seleccionar imagen:', error);
-      alert(error.message);
+      setError(error.message);
+      setPreview(null);
+      setFile(null);
       return null;
     }
   };
@@ -216,14 +194,63 @@ export function useImageUpload() {
   const clearPreview = () => {
     setPreview(null);
     setFile(null);
+    setError(null);
   };
 
   return {
     uploading,
     preview,
     file,
+    error,
     handleFileSelect,
     clearPreview,
+    setUploading,
+  };
+}
+
+/**
+ * Hook React para manejar subida de PDFs
+ * 
+ * @example
+ * const { file, handleFileSelect, clearFile } = usePDFUpload();
+ */
+export function usePDFUpload() {
+  const [uploading, setUploading] = React.useState(false);
+  const [file, setFile] = React.useState(null);
+  const [error, setError] = React.useState(null);
+
+  const handleFileSelect = async (event) => {
+    const selectedFile = event.target.files[0];
+    
+    if (!selectedFile) return null;
+
+    try {
+      setError(null);
+      
+      // Validar
+      validarArchivo(selectedFile, 'pdf');
+      setFile(selectedFile);
+      
+      return selectedFile;
+    } catch (error) {
+      console.error('Error al seleccionar PDF:', error);
+      setError(error.message);
+      setFile(null);
+      return null;
+    }
+  };
+
+  const clearFile = () => {
+    setFile(null);
+    setError(null);
+  };
+
+  return {
+    uploading,
+    file,
+    error,
+    handleFileSelect,
+    clearFile,
     setUploading,
   };
 }
@@ -232,10 +259,10 @@ export default {
   validarArchivo,
   crearFormDataConArchivo,
   previsualizarImagen,
-  comprimirImagen,
   obtenerUrlImagen,
   obtenerExtension,
   generarNombreUnico,
   validarPDF,
   useImageUpload,
+  usePDFUpload,
 };

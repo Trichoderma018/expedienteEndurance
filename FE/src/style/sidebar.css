@@ -1,0 +1,19 @@
+.sidebar-container {
+  background-color: #152741;
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+}
+
+.btn-sidebar {
+  background-color: #152741;
+  border-bottom: solid 0.5px;
+  padding: 10px;
+  text-decoration: none;
+  color: whitesmoke;
+  line-height: 40px;
+}
+
+.btn55 {
+  text-align: left;
+}

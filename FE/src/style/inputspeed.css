@@ -1,0 +1,149 @@
+/* Contenedor principal */
+.proyectos-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+}
+
+/* Título principal */
+.proyectos-container h2 {
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #1f2a44;
+    border-bottom: 2px solid #e63946;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Estilo general para inputs y selects */
+.selectsEx {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    background-color: #f9f9f9;
+    color: #333;
+    transition: border 0.3s ease;
+}
+
+.selectsEx:focus {
+    border-color: #1f2a44;
+    outline: none;
+}
+
+/* Campo de imagen */
+.campo label {
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 6px;
+    display: inline-block;
+}
+
+/* Botones */
+.button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button[type="submit"] {
+    background-color: #1f2a44;
+    color: white;
+}
+
+.button:not([type="submit"]) {
+    background-color: white;
+    color: #1f2a44;
+    border: 2px solid #1f2a44;
+}
+
+.button:hover {
+    opacity: 0.9;
+}
+
+/* Tabla de expedientes */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th.selectsEx {
+    background-color: #f1f1f1;
+    color: #1f2a44;
+    font-weight: bold;
+}
+
+tr.selectsEx:hover {
+    background-color: #f9f9f9;
+}
+
+/* Botones de acción en tabla */
+.FLR {
+    padding: 6px 12px;
+    margin-right: 6px;
+    border: none;
+    border-radius: 6px;
+    background-color: #1f2a44;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.FLR:hover {
+    background-color: #2c3e5f;
+}
+
+.FLRR {
+    padding: 6px 12px;
+    margin-right: 6px;
+    border: none;
+    border-radius: 6px;
+    background-color: #e63946;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.FLRR:hover {
+    background-color: #2c3e5f;
+}
+
+/* Spinner y error */
+.spinner span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin: 0 2px;
+    background-color: #1f2a44;
+    border-radius: 50%;
+    animation: bounce 1.2s infinite ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1); }
+}
+
+.error {
+    color: #e63946;
+    font-weight: bold;
+    margin-top: 10px;
+}

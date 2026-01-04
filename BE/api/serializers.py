@@ -121,7 +121,8 @@ class CrearUsuarioAtletaSerializer(serializers.ModelSerializer):
     )
     imagen_perfil = serializers.ImageField(
         write_only=True,
-        required=False
+        required=False,
+        validators=[validar_tamano_imagen, validar_tipo_imagen]
     )
     
     class Meta:

@@ -1,0 +1,18 @@
+.AdminMantConteiner {
+  width: 100%;
+  background-color: yellow;
+  display: flex;
+}
+
+.mant-admin22 {
+  width: 80%;
+  padding: 40px;
+}
+
+.mant-admin23 {
+  width: 80%;
+  padding: 40px;
+  height: 66vh;
+  overflow-y: auto;
+}
+

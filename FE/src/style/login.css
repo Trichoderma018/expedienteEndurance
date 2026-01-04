@@ -1,0 +1,260 @@
+*{
+    background-color: #F8F3F7;
+    color: black;
+}
+
+/* .rtflx {
+ background-color: #cf26ad;
+ color: #000000;
+} */
+
+
+/* From Uiverse.io by rajesh_4474 */ 
+/* login form by rajesh_4474 */
+@keyframes gradientBackground {
+  0% {
+    background: linear-gradient(45deg, #ff7e5f, #feb47b);
+  }
+  50% {
+    background: linear-gradient(45deg, #58bc82, #45a56b);
+  }
+  100% {
+    background: linear-gradient(45deg, #ff7e5f, #feb47b);
+  }
+}
+.login-container {
+  position: relative;
+  overflow: hidden;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  background-image: url("../assets/img/Fondo.png")
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 30px;
+  width: 30%;
+  border: solid 0.5px;
+  border-radius: 20px;
+}
+
+.logo {
+  width: 50%;
+  height: 40%;
+  margin: 0 auto 20px;
+}
+
+.form-heading {
+  text-align: center;
+  color: #333;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 25px;
+  background-color: transparent;
+}
+
+ .input-group .label {
+  position: absolute;
+  top: -16px;
+  left: 12px;
+  font-size: 12px;
+  color: #0197A6;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  opacity: 0.7;
+} 
+
+.input-group input {
+  width: 105%;
+  padding: 15px 20px;
+  font-size: 1rem;
+  color: #333;
+  background-color: #F8F3F7;
+  border: 2px solid #828282;
+  border-radius: 10px !important;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+  border-color: #18417B;
+  box-shadow: 0 0 10px rgba(88, 188, 130, 0.4);
+}
+
+.input-group input:focus + .label {
+  top: -20px;
+  font-size: 11px;
+  color: #0197A6;
+  opacity: 1;
+}
+
+.forgot-password {
+  text-align: right;
+  margin-bottom: 20px;
+  background-color: #F8F3F7; 
+}
+
+.forgot-password a {
+  font-size: 14px;
+  color: #0197A6;
+  text-decoration: none;
+  transition: color 0.4s ease;
+}
+
+.forgot-password a:hover {
+  color: #0197A6;
+}
+
+.submit {
+  width: 100%;
+  padding: 15px;
+  background-color: #0197A6;
+  color: #F8F3F7;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit:hover {
+  background-color: #0197A6;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(88, 188, 130, 0.3);
+}
+
+.signup-link {
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.signup-link a {
+  color: #0197A6;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.logi {
+ background-color: #F8F3F7;
+ color: #333;
+
+}
+
+.signup-link a:hover {
+  color: #0197A6;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form {
+    padding: 30px;
+    width: 90%;
+  }
+}
+
+/* Mejorar responsividad del formulario */
+.login-form {
+  max-width: 420px;    
+  width: 90%;         
+}
+
+@media (min-width: 481px) and (max-width: 1024px) {
+  .login-form {
+    width: 60%;       
+  }
+}
+
+.auth-link {
+  background: none;
+  border: none;
+  color: #007bff;
+  text-decoration: underline;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.auth-link:hover {
+  color: #0056b3;
+}
+
+/* Fondo oscuro para modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Contenedor del modal */
+.modal-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  animation: slideDown 0.3s ease-in-out;
+}
+
+/* Botón cerrar */
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  color: #333;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: #000;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+

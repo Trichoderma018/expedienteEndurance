@@ -1,0 +1,170 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #F8F3F7;
+  color: #333; /* Cambiado de #000000 a #333 */
+  font-family: 'Roboto', sans-serif;
+}
+
+.login-container {
+  position: relative;
+  overflow: hidden;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  background-image: url("../assets/img/Fondo.png"); /* Asegúrate de que el fondo sea el mismo */
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 30px;
+  max-width: 420px; /* Igual que login */
+  width: 90%; /* Igual que login */
+  border: solid 0.5px; /* Igual que login */
+  border-radius: 20px;
+}
+
+.logo {
+  width: 50%; /* Igual que login */
+  height: 40%; /* Igual que login */
+  margin: 0 auto 20px;
+}
+
+.form-heading {
+  text-align: center;
+  color: #333;
+  font-size: 2rem; /* Igual que login */
+  font-weight: 600;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 25px;
+  background-color: transparent;
+}
+
+.input-group label {
+  position: absolute;
+  top: -16px;
+  left: 12px;
+  font-size: 12px;
+  color: #0197A6;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  opacity: 0.7;
+}
+
+.input-group input {
+  width: 105%; /* Igual que login */
+  padding: 15px 20px; /* Igual que login */
+  font-size: 1rem;
+  color: #333;
+  background-color: #F8F3F7;
+  border: 2px solid #828282; /* Igual que login */
+  border-radius: 10px; /* Igual que login */
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+  border-color: #18417B; /* Igual que login */
+  box-shadow: 0 0 10px rgba(88, 188, 130, 0.4);
+}
+
+.input-group input:focus + label,
+.input-group input:valid + label {
+  top: -20px;
+  font-size: 11px;
+  color: #0197A6;
+  opacity: 1;
+}
+
+.submit {
+  width: 100%; /* Igual que login */
+  padding: 15px; /* Igual que login */
+  background-color: #0197A6; /* Igual que login */
+  color: #F8F3F7; /* Igual que login */
+  border: none;
+  border-radius: 30px; /* Igual que login */
+  font-size: 1.1rem; /* Igual que login */
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit:hover {
+  background-color: #0197A6;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(88, 188, 130, 0.3);
+}
+
+.signup-link {
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.signup-link a {
+  color: #0197A6;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.signup-link a:hover {
+  color: #0197A6;
+}
+
+.password-strength {
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.error-message {
+  text-align: center;
+  font-size: 14px;
+  color: red; /* Ajustar según el diseño deseado */
+  margin-bottom: 25px;
+}
+
+.loading-spinner {
+  text-align: center;
+  margin-top: 10px;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form {
+    padding: 30px;
+    width: 90%;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 1024px) {
+  .login-form {
+    width: 60%;
+  }
+}
