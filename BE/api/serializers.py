@@ -1,7 +1,52 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from .models import CustomUser, Expediente, Visita, Familiar, Proyecto, ProyectoUsuario
+from django.core.exceptions import ValidationError
 
+# ============================================
+# VALIDADORES PERSONALIZADOS
+# ============================================
+
+def validar_tamano_imagen(value):
+    """
+    Valida que la imagen no supere 5MB
+    """
+    limite_mb = 5
+    limite_bytes = limite_mb * 1024 * 1024  # 5 MB en bytes
+    
+    if value.size > limite_bytes:
+        raise ValidationError(
+            f'El tamaño de la imagen no puede superar {limite_mb}MB. '
+            f'Tamaño actual: {value.size / 1024 / 1024:.2f}MB'
+        )
+
+def validar_tipo_imagen(value):
+    """
+    Valida que el archivo sea una imagen válida
+    """
+    tipos_validos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+    
+    if value.content_type not in tipos_validos:
+        raise ValidationError(
+            f'Tipo de archivo no permitido: {value.content_type}. '
+            f'Tipos permitidos: {", ".join(tipos_validos)}'
+        )
+
+def validar_tamano_pdf(value):
+    """
+    Valida que el PDF no supere 10MB
+    """
+    limite_mb = 10
+    limite_bytes = limite_mb * 1024 * 1024  # 10 MB en bytes
+    
+    if value.size > limite_bytes:
+        raise ValidationError(
+            f'El tamaño del PDF no puede superar {limite_mb}MB. '
+            f'Tamaño actual: {value.size / 1024 / 1024:.2f}MB'
+        )
+    
+    if value.content_type != 'application/pdf':
+        raise ValidationError('El archivo debe ser un PDF')
 
 # ============= USUARIOS =============
 
@@ -211,8 +256,12 @@ class VisitaSerializer(serializers.ModelSerializer):
 
 
 class VisitaCrearSerializer(serializers.ModelSerializer):
-    """Serializer para crear visitas con familiares"""
+    """Serializer para crear visitas con familiares y validación de archivos"""
     familiares = FamiliarSerializer(many=True, required=False)
+    adjunto_notas = serializers.FileField(
+        required=False,
+        validators=[validar_tamano_pdf]
+    )
     
     class Meta:
         model = Visita
@@ -247,7 +296,6 @@ class VisitaCrearSerializer(serializers.ModelSerializer):
         
         return instance
 
-
 # ============= EXPEDIENTES =============
 
 class ExpedienteSerializer(serializers.ModelSerializer):
@@ -272,14 +320,17 @@ class ExpedienteSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(obj.imagen.url)
         return None
 
-
 class ExpedienteCrearSerializer(serializers.ModelSerializer):
-    """Serializer simplificado para crear expedientes"""
+    """Serializer con validación de tamaño de imagen"""
+    imagen = serializers.ImageField(
+        required=False,
+        validators=[validar_tamano_imagen, validar_tipo_imagen]
+    )
+    
     class Meta:
         model = Expediente
         fields = ['user', 'imagen', 'genero', 'comentario_general',
                   'comentario_academico', 'comentario_economico', 'activo']
-
 
 # ============= PROYECTOS =============
 

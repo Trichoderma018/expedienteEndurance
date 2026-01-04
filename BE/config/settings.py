@@ -12,10 +12,28 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Configuración de archivos media
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# ============================================
+# LÍMITES DE TAMAÑO DE ARCHIVOS
+# ============================================
+
+# Tamaño máximo para archivos subidos en memoria (2.5 MB)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 2621440  # 2.5 MB en bytes
+
+# Tamaño máximo total de archivos subidos (10 MB)
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10 MB en bytes
+
+# Tamaño máximo del request completo (incluyendo todos los campos)
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000  # Número máximo de campos en un form
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -143,6 +161,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
+    'http://127.0.0.1:5173',
 ]
 
 REST_FRAMEWORK = {
